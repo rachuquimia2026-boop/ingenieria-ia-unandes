@@ -1,0 +1,521 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrap { max-width: 680px; padding: 2rem 0; }
+.hero { border-left: 3px solid #1D9E75; padding: 0.75rem 1.25rem; margin-bottom: 2rem; background: var(--color-background-secondary); border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; }
+.hero h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.hero p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; }
+.badge-teal { background: #E1F5EE; color: #0F6E56; }
+.badge-blue { background: #E6F1FB; color: #185FA5; }
+.badge-purple { background: #EEEDFE; color: #534AB7; }
+.badge-amber { background: #FAEEDA; color: #854F0B; }
+.badge-coral { background: #FAECE7; color: #993C1D; }
+.section { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
+.section-num { width: 28px; height: 28px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.chevron { font-size: 16px; color: var(--color-text-secondary); transition: transform 0.2s; }
+.chevron.open { transform: rotate(180deg); }
+.section-body { display: none; }
+.section-body.open { display: block; }
+.infobox { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; border-left: 2px solid var(--color-border-secondary); }
+.subsec { margin-bottom: 1rem; }
+.sublabel { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 6px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.check-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; color: var(--color-text-primary); cursor: pointer; transition: background 0.15s; line-height: 1.4; }
+.check-item:hover { background: var(--color-background-secondary); }
+.check-item input[type=checkbox] { margin-top: 2px; flex-shrink: 0; accent-color: #1D9E75; }
+.check-item.checked { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
+.sem-block { margin-bottom: 0.75rem; }
+.sem-label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px; padding: 3px 8px; background: var(--color-background-secondary); border-radius: 4px; display: inline-block; }
+.asig-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; }
+.asig-row:last-child { border-bottom: none; }
+.asig-name { flex: 1; color: var(--color-text-primary); }
+.pill-toggle { display: flex; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; overflow: hidden; font-size: 11px; }
+.pill-opt { padding: 2px 8px; cursor: pointer; color: var(--color-text-secondary); }
+.pill-opt.active-obl { background: #1D9E75; color: #fff; }
+.pill-opt.active-elec { background: #185FA5; color: #fff; }
+.pill-opt:hover { background: var(--color-background-secondary); }
+.ra-item { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; }
+.ra-num { width: 20px; height: 20px; border-radius: 50%; background: #E1F5EE; color: #085041; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.ra-text { flex: 1; font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+textarea { width: 100%; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 10px; font-size: 13px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); resize: vertical; min-height: 60px; }
+textarea:focus { outline: none; border-color: #1D9E75; }
+input[type=text] { width: 100%; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 10px; font-size: 13px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); }
+input[type=text]:focus { outline: none; border-color: #1D9E75; }
+select { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 10px; font-size: 13px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); width: 100%; }
+.sem-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sem-chip { padding: 3px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary); }
+.sem-chip.sel { background: #185FA5; color: #fff; border-color: #185FA5; }
+.tray-card { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 1rem; margin-bottom: 0.75rem; }
+.tray-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; }
+.tray-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.tray-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.elec-check { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--color-text-primary); cursor: pointer; }
+.elec-check input { accent-color: #534AB7; }
+.tool-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: 20px; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; margin: 3px; transition: all 0.15s; }
+.tool-chip.sel { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+.prog-bar { height: 6px; background: var(--color-background-secondary); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #1D9E75, #185FA5); border-radius: 3px; transition: width 0.4s; }
+.prog-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; display: flex; justify-content: space-between; }
+.gen-btn { width: 100%; padding: 12px; background: #1D9E75; color: #fff; border: none; border-radius: var(--border-radius-lg); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.gen-btn:hover { background: #0F6E56; }
+.gen-btn:disabled { background: var(--color-border-secondary); cursor: not-allowed; }
+.status-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--border-radius-md); font-size: 13px; margin-bottom: 4px; }
+.status-ok { background: #E1F5EE; color: #085041; }
+.status-pend { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.add-row { display: flex; gap: 8px; margin-top: 8px; }
+.add-btn { padding: 5px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 12px; cursor: pointer; color: var(--color-text-secondary); background: transparent; font-family: var(--font-sans); white-space: nowrap; }
+.add-btn:hover { background: var(--color-background-secondary); }
+.rubric-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rubric-table th { background: var(--color-background-secondary); color: var(--color-text-secondary); font-weight: 500; padding: 6px 8px; text-align: left; border: 0.5px solid var(--color-border-tertiary); }
+.rubric-table td { padding: 5px 8px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1rem 0; }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only">Formulario interactivo para diseño de carrera: Ingeniería en Inteligencia Artificial</h2>
+
+  <div class="hero">
+    <span class="badge badge-teal">Diseño Curricular · Universidad</span>
+    <h1>Mapa de Aprendizaje y Trayectos Formativos</h1>
+    <p>Ingeniería en Inteligencia Artificial — Formulario de Diseño Curricular</p>
+  </div>
+
+  <div class="prog-label"><span id="prog-text">Progreso del formulario</span><span id="prog-pct">0%</span></div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <div class="infobox">
+    <strong style="color:var(--color-text-primary)">¿Qué es un Mapa de Aprendizaje?</strong> Es la representación visual y estructurada de cómo se desarrollan las competencias profesionales a lo largo de la carrera: qué aprende el estudiante, cuándo, cómo se evalúa y qué evidencias debe demostrar. <br><br>
+    <strong style="color:var(--color-text-primary)">¿Qué son los Trayectos Formativos?</strong> Son rutas de especialización optativas dentro de la carrera. El estudiante elige un conjunto de asignaturas electivas que le permiten profundizar en un área de la IA (por ej. IA Generativa, IA Aplicada al Agro, Robótica Inteligente). Cada trayecto tiene un perfil de salida diferenciado.
+  </div>
+
+  <!-- SECCIÓN 1 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('s1')">
+      <div class="section-num">1</div>
+      <span class="section-title">Perfil de Egreso — Competencias Profesionales</span>
+      <span class="badge badge-teal" style="font-size:11px" id="s1-cnt">0 sel.</span>
+      <i class="ti ti-chevron-down chevron" id="s1-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body open" id="s1">
+      <div class="infobox">Selecciona las competencias que definirán al egresado. Mínimo recomendado: 6. Puedes agregar competencias personalizadas al final.</div>
+      <div class="grid2" id="comp-grid">
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Diseñar, entrenar y evaluar modelos de aprendizaje automático supervisado y no supervisado</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Desarrollar sistemas de IA generativa y modelos de lenguaje de gran escala (LLMs)</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Aplicar técnicas de visión por computadora para análisis de imágenes y video</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Gestionar y procesar grandes volúmenes de datos (Big Data & Data Engineering)</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Desplegar modelos en producción usando prácticas de MLOps y arquitecturas cloud</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Analizar y resolver problemas complejos aplicando IA en sectores productivos (minería, salud, agro, industria)</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Diseñar soluciones de IA con enfoque ético, responsable y centrado en el ser humano</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Comunicar resultados técnicos a audiencias multidisciplinarias y tomar decisiones basadas en datos</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Desarrollar e implementar sistemas de procesamiento del lenguaje natural (NLP/PLN)</span></label>
+        <label class="check-item" onclick="markCheck(this,'s1-cnt')"><input type="checkbox" onchange="updateProg()"><span>Liderar proyectos tecnológicos de IA integrando equipos interdisciplinarios</span></label>
+      </div>
+      <div class="divider"></div>
+      <div class="sublabel">Agregar competencia personalizada</div>
+      <div id="custom-comps"></div>
+      <div class="add-row">
+        <input type="text" id="new-comp" placeholder="Escribe una competencia adicional..." style="flex:1">
+        <button class="add-btn" onclick="addComp()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('s2')">
+      <div class="section-num">2</div>
+      <span class="section-title">Asignaturas y Estructura Curricular</span>
+      <span class="badge badge-blue" style="font-size:11px">8 semestres</span>
+      <i class="ti ti-chevron-down chevron" id="s2-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body" id="s2">
+      <div class="infobox">Marca cada asignatura como <strong style="color:#1D9E75">Obligatoria</strong> (núcleo troncal) o <strong style="color:#185FA5">Electiva</strong> (dentro del trayecto formativo). Puedes agregar asignaturas propias.</div>
+      <div id="asig-list"></div>
+      <div class="divider"></div>
+      <div class="sublabel">Agregar nueva asignatura</div>
+      <div class="add-row">
+        <input type="text" id="new-asig-name" placeholder="Nombre de la asignatura" style="flex:1">
+        <select id="new-asig-sem" style="width:130px">
+          <option value="">Semestre</option>
+          <option>1° sem.</option><option>2° sem.</option><option>3° sem.</option><option>4° sem.</option>
+          <option>5° sem.</option><option>6° sem.</option><option>7° sem.</option><option>8° sem.</option>
+        </select>
+        <button class="add-btn" onclick="addAsig()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('s3')">
+      <div class="section-num">3</div>
+      <span class="section-title">Construcción del Mapa de Aprendizaje</span>
+      <span class="badge badge-purple" style="font-size:11px">Por competencia</span>
+      <i class="ti ti-chevron-down chevron" id="s3-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body" id="s3">
+      <div class="infobox">Para cada competencia del perfil de egreso, define los resultados de aprendizaje, evidencias y criterios de evaluación. Completa al menos una competencia.</div>
+      <div class="subsec">
+        <div class="sublabel">Competencia a mapear</div>
+        <select id="sel-comp" onchange="updateProg()">
+          <option value="">— Selecciona una competencia —</option>
+          <option>Diseñar, entrenar y evaluar modelos de aprendizaje automático</option>
+          <option>Desarrollar sistemas de IA generativa y LLMs</option>
+          <option>Aplicar técnicas de visión por computadora</option>
+          <option>Gestionar y procesar grandes volúmenes de datos</option>
+          <option>Desplegar modelos en producción (MLOps)</option>
+          <option>Aplicar IA en sectores productivos</option>
+          <option>Diseñar soluciones de IA con enfoque ético</option>
+          <option>Comunicar resultados técnicos</option>
+          <option>Desarrollar sistemas NLP/PLN</option>
+          <option>Liderar proyectos de IA interdisciplinarios</option>
+        </select>
+      </div>
+      <div class="subsec">
+        <div class="sublabel">Resultados de aprendizaje (mínimo 4)</div>
+        <div id="ra-list">
+          <div class="ra-item"><div class="ra-num">1</div><div class="ra-text"><input type="text" placeholder="El estudiante será capaz de..."></div></div>
+          <div class="ra-item"><div class="ra-num">2</div><div class="ra-text"><input type="text" placeholder="El estudiante será capaz de..."></div></div>
+          <div class="ra-item"><div class="ra-num">3</div><div class="ra-text"><input type="text" placeholder="El estudiante será capaz de..."></div></div>
+          <div class="ra-item"><div class="ra-num">4</div><div class="ra-text"><input type="text" placeholder="El estudiante será capaz de..."></div></div>
+        </div>
+        <button class="add-btn" style="margin-top:6px" onclick="addRA()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar resultado</button>
+      </div>
+      <div class="subsec">
+        <div class="sublabel">Evidencias de aprendizaje</div>
+        <textarea placeholder="Ej: Proyecto final de implementación, portafolio de modelos entrenados, demo funcional, informe técnico de resultados..."></textarea>
+      </div>
+      <div class="subsec">
+        <div class="sublabel">Criterios de evaluación (rúbrica simplificada)</div>
+        <table class="rubric-table">
+          <thead><tr><th>Criterio</th><th>Logrado (90–100%)</th><th>En proceso (70–89%)</th><th>Inicial (&lt;70%)</th></tr></thead>
+          <tbody>
+            <tr><td><input type="text" placeholder="Criterio 1" style="width:100%;border:none;padding:0;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td></tr>
+            <tr><td><input type="text" placeholder="Criterio 2" style="width:100%;border:none;padding:0;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td></tr>
+            <tr><td><input type="text" placeholder="Criterio 3" style="width:100%;border:none;padding:0;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td><td><input type="text" placeholder="Descriptor..." style="width:100%;border:none;font-size:12px;background:transparent"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subsec">
+        <div class="sublabel">Semestres donde se desarrolla esta competencia</div>
+        <div class="sem-checks" id="sem-chips">
+          <span class="sem-chip" onclick="toggleChip(this)">1°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">2°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">3°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">4°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">5°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">6°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">7°</span>
+          <span class="sem-chip" onclick="toggleChip(this)">8°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('s4')">
+      <div class="section-num">4</div>
+      <span class="section-title">Trayectos Formativos — Rutas de Especialización</span>
+      <span class="badge badge-amber" style="font-size:11px">2 trayectos</span>
+      <i class="ti ti-chevron-down chevron" id="s4-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body" id="s4">
+      <div class="infobox">Define dos trayectos de especialización. Para cada uno, asigna materias del catálogo de libre elección y redacta el perfil de salida diferenciado.</div>
+
+      <div class="sublabel" style="margin-bottom:8px">Catálogo de materias de libre elección</div>
+      <div class="grid3" id="catalogo">
+        <label class="elec-check"><input type="checkbox"> IA Generativa Avanzada</label>
+        <label class="elec-check"><input type="checkbox"> Ingeniería de Prompts</label>
+        <label class="elec-check"><input type="checkbox"> Fine-Tuning de LLMs</label>
+        <label class="elec-check"><input type="checkbox"> Agentes Autónomos y Multiagentes</label>
+        <label class="elec-check"><input type="checkbox"> Visión por Computadora Aplicada</label>
+        <label class="elec-check"><input type="checkbox"> IA en Minería y Geología</label>
+        <label class="elec-check"><input type="checkbox"> IA Aplicada a la Agronomía</label>
+        <label class="elec-check"><input type="checkbox"> Robótica Inteligente</label>
+        <label class="elec-check"><input type="checkbox"> IA en Salud y Biomedicina</label>
+        <label class="elec-check"><input type="checkbox"> Sistemas de Recomendación</label>
+        <label class="elec-check"><input type="checkbox"> IA y Ciberseguridad</label>
+        <label class="elec-check"><input type="checkbox"> Procesamiento de Lenguaje Natural Avanzado</label>
+        <label class="elec-check"><input type="checkbox"> Ética, Regulación y Gobernanza de la IA</label>
+        <label class="elec-check"><input type="checkbox"> IA en Finanzas y Riesgo</label>
+        <label class="elec-check"><input type="checkbox"> Aprendizaje por Refuerzo Profundo</label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="tray-card">
+        <div class="tray-header">
+          <div class="tray-dot" style="background:#1D9E75"></div>
+          <div class="tray-title">Trayecto A</div>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Nombre del trayecto</div>
+          <input type="text" placeholder="Ej: IA Generativa y LLMs" id="tray-a-name">
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Descripción</div>
+          <textarea placeholder="Describe el enfoque y propósito de este trayecto de especialización..." id="tray-a-desc"></textarea>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">5–6 materias recomendadas para este trayecto (marca del catálogo superior)</div>
+          <div id="tray-a-sel" style="font-size:12px;color:var(--color-text-secondary);padding:4px 0">Selecciona del catálogo y escribe aquí los nombres:</div>
+          <textarea placeholder="1. &#10;2. &#10;3. &#10;4. &#10;5. " style="min-height:80px;font-size:12px" id="tray-a-mats"></textarea>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Perfil de salida diferenciado</div>
+          <textarea placeholder="El egresado de este trayecto será capaz de..." id="tray-a-perfil"></textarea>
+        </div>
+      </div>
+
+      <div class="tray-card">
+        <div class="tray-header">
+          <div class="tray-dot" style="background:#185FA5"></div>
+          <div class="tray-title">Trayecto B</div>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Nombre del trayecto</div>
+          <input type="text" placeholder="Ej: IA Aplicada a Minería y Agro" id="tray-b-name">
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Descripción</div>
+          <textarea placeholder="Describe el enfoque y propósito de este trayecto de especialización..." id="tray-b-desc"></textarea>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">5–6 materias recomendadas para este trayecto</div>
+          <textarea placeholder="1. &#10;2. &#10;3. &#10;4. &#10;5. " style="min-height:80px;font-size:12px" id="tray-b-mats"></textarea>
+        </div>
+        <div class="subsec">
+          <div class="sublabel">Perfil de salida diferenciado</div>
+          <textarea placeholder="El egresado de este trayecto será capaz de..." id="tray-b-perfil"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle('s5')">
+      <div class="section-num">5</div>
+      <span class="section-title">Integración de IA como Herramienta de Aprendizaje</span>
+      <span class="badge badge-coral" style="font-size:11px">Metodología</span>
+      <i class="ti ti-chevron-down chevron" id="s5-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body" id="s5">
+      <div class="infobox">Define cómo se usará la IA dentro de la propia carrera: qué herramientas, bajo qué metodologías y con qué marco ético. Esto diferencia la propuesta de programas tradicionales.</div>
+
+      <div class="subsec">
+        <div class="sublabel">Herramientas de IA que se integrarán en la metodología docente</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-message-2" aria-hidden="true"></i> ChatGPT / GPT-4o</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-message-2" aria-hidden="true"></i> Claude</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-code" aria-hidden="true"></i> GitHub Copilot</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-chart-bar" aria-hidden="true"></i> Gemini / Vertex AI</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-brain" aria-hidden="true"></i> Hugging Face</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-cloud" aria-hidden="true"></i> Google Colab + IA</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-robot" aria-hidden="true"></i> Perplexity</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-file-text" aria-hidden="true"></i> NotebookLM</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-presentation" aria-hidden="true"></i> Gamma / Canva IA</span>
+          <span class="tool-chip" onclick="this.classList.toggle('sel')"><i class="ti ti-database" aria-hidden="true"></i> LangChain / LlamaIndex</span>
+        </div>
+      </div>
+
+      <div class="subsec" style="margin-top:1rem">
+        <div class="sublabel">Metodologías pedagógicas que incorporan IA</div>
+        <div class="grid2" style="margin-top:4px">
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Aprendizaje Basado en Proyectos con IA (ABPIA)</span></label>
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Tutoría aumentada con asistentes de IA personalizados</span></label>
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Evaluación formativa continua con retroalimentación de IA</span></label>
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Flipped classroom asistido por agentes inteligentes</span></label>
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Co-creación de soluciones con IA generativa (pair programming)</span></label>
+          <label class="check-item" onclick="markCheck(this,null)"><input type="checkbox"><span>Simulación de escenarios profesionales con LLMs</span></label>
+        </div>
+      </div>
+
+      <div class="subsec" style="margin-top:1rem">
+        <div class="sublabel">Marco ético y de uso responsable de la IA en el aula</div>
+        <textarea placeholder="Describe las políticas de uso responsable: cómo se diferencia el trabajo del estudiante del generado por IA, qué usos están permitidos, cómo se garantiza la integridad académica..." style="min-height:80px"></textarea>
+      </div>
+
+      <div class="subsec">
+        <div class="sublabel">¿Existe una asignatura transversal de Ética en IA? (recomendado)</div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <label class="check-item" style="flex:1;justify-content:center" onclick="markCheck(this,null)"><input type="checkbox"><span>Sí, es obligatoria en todos los semestres</span></label>
+          <label class="check-item" style="flex:1;justify-content:center" onclick="markCheck(this,null)"><input type="checkbox"><span>Sí, como asignatura independiente</span></label>
+          <label class="check-item" style="flex:1;justify-content:center" onclick="markCheck(this,null)"><input type="checkbox"><span>Se integra transversalmente en cada materia</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN FINAL -->
+  <div class="section" style="border-color:#1D9E75;border-width:1.5px">
+    <div class="section-header" onclick="toggle('sf')">
+      <div class="section-num" style="background:#E1F5EE;color:#085041"><i class="ti ti-sparkles" aria-hidden="true" style="font-size:14px"></i></div>
+      <span class="section-title">Generación del Pitch y Resumen Ejecutivo</span>
+      <i class="ti ti-chevron-down chevron" id="sf-chev" aria-hidden="true"></i>
+    </div>
+    <div class="section-body open" id="sf">
+      <div class="infobox">Una vez que hayas completado todas las secciones anteriores, esta área muestra el estado de tu formulario. Al escribir <strong style="color:var(--color-text-primary)">"GENERAR PITCH"</strong> en el chat, Claude generará automáticamente el paquete completo de presentación.</div>
+
+      <div class="sublabel" style="margin-bottom:8px">Estado de las secciones</div>
+      <div id="status-checks">
+        <div class="status-row status-pend"><i class="ti ti-circle" aria-hidden="true"></i> Sección 1: Perfil de Egreso</div>
+        <div class="status-row status-pend"><i class="ti ti-circle" aria-hidden="true"></i> Sección 2: Estructura Curricular</div>
+        <div class="status-row status-pend"><i class="ti ti-circle" aria-hidden="true"></i> Sección 3: Mapa de Aprendizaje</div>
+        <div class="status-row status-pend"><i class="ti ti-circle" aria-hidden="true"></i> Sección 4: Trayectos Formativos</div>
+        <div class="status-row status-pend"><i class="ti ti-circle" aria-hidden="true"></i> Sección 5: Integración de IA</div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sublabel" style="margin-bottom:8px">El pitch incluirá automáticamente:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1rem">
+        <div class="status-row" style="background:var(--color-background-secondary)"><i class="ti ti-file-description" aria-hidden="true" style="color:#1D9E75"></i> Resumen ejecutivo de la carrera</div>
+        <div class="status-row" style="background:var(--color-background-secondary)"><i class="ti ti-microphone-2" aria-hidden="true" style="color:#185FA5"></i> Guion de pitch (3–5 min.)</div>
+        <div class="status-row" style="background:var(--color-background-secondary)"><i class="ti ti-star" aria-hidden="true" style="color:#854F0B"></i> Puntos fuertes de la propuesta</div>
+        <div class="status-row" style="background:var(--color-background-secondary)"><i class="ti ti-presentation" aria-hidden="true" style="color:#534AB7"></i> Estructura de diapositivas (PPT/Canva)</div>
+      </div>
+
+      <button class="gen-btn" onclick="generatePitch()">
+        <i class="ti ti-sparkles" aria-hidden="true"></i>
+        Generar Pitch y Presentación Completa ↗
+      </button>
+      <p style="font-size:12px;color:var(--color-text-secondary);text-align:center;margin-top:8px">También puedes escribir "GENERAR PITCH" directamente en el chat</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const asignaturas = [
+  {sem:1, list:["Fundamentos de Programación con Python","Matemáticas Discretas para IA","Álgebra Lineal Computacional","Fundamentos de Ciencias de la Computación","Introducción a la Inteligencia Artificial"]},
+  {sem:2, list:["Cálculo Multivariable y Optimización","Probabilidad y Estadística Aplicada","Estructuras de Datos y Algoritmos","Bases de Datos Relacionales y No Relacionales","Ética en Tecnología e IA"]},
+  {sem:3, list:["Aprendizaje Automático I (Supervisado)","Programación Orientada a Objetos","Ingeniería de Datos y ETL","Visualización de Datos","Inglés Técnico para IA"]},
+  {sem:4, list:["Aprendizaje Automático II (No Supervisado)","Redes Neuronales Artificiales","Big Data y Procesamiento Distribuido","Metodología de la Investigación","Proyecto Integrador I"]},
+  {sem:5, list:["Aprendizaje Profundo (Deep Learning)","Procesamiento del Lenguaje Natural","Visión por Computadora","MLOps y Despliegue de Modelos","Arquitecturas Cloud para IA"]},
+  {sem:6, list:["Modelos de Lenguaje de Gran Escala (LLMs)","Aprendizaje por Refuerzo","IA Generativa y Modelos Difusión","Sistemas Multi-Agente","Electiva I (Trayecto Formativo)"]},
+  {sem:7, list:["IA Explicable y Auditoría de Modelos","Seguridad y Privacidad en IA","Electiva II (Trayecto Formativo)","Electiva III (Trayecto Formativo)","Proyecto Integrador II"]},
+  {sem:8, list:["Gobernanza y Regulación de la IA","Electiva IV (Trayecto Formativo)","Seminario de Innovación y Emprendimiento IA","Práctica Profesional / Internado","Tesis o Proyecto de Titulación"]}
+];
+
+function buildAsig() {
+  const el = document.getElementById('asig-list');
+  el.innerHTML = asignaturas.map(s => `
+    <div class="sem-block">
+      <div class="sem-label">Semestre ${s.sem}</div>
+      ${s.list.map(a => `
+        <div class="asig-row">
+          <span class="asig-name">${a}</span>
+          <div class="pill-toggle">
+            <span class="pill-opt active-obl" onclick="setPill(this,'obl')">Obligatoria</span>
+            <span class="pill-opt" onclick="setPill(this,'elec')">Electiva</span>
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+buildAsig();
+
+function setPill(el, type) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.pill-opt').forEach(p => { p.classList.remove('active-obl','active-elec'); });
+  el.classList.add(type === 'obl' ? 'active-obl' : 'active-elec');
+  updateProg();
+}
+
+function toggle(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById(id+'-chev');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if(chev) chev.classList.toggle('open', !isOpen);
+}
+
+function markCheck(label, cntId) {
+  const cb = label.querySelector('input[type=checkbox]');
+  setTimeout(() => {
+    label.classList.toggle('checked', cb.checked);
+    if(cntId) {
+      const grid = label.parentElement;
+      const cnt = grid.querySelectorAll('input:checked').length;
+      document.getElementById(cntId).textContent = cnt + ' sel.';
+    }
+    updateProg();
+  }, 0);
+}
+
+function toggleChip(el) { el.classList.toggle('sel'); }
+
+function addComp() {
+  const inp = document.getElementById('new-comp');
+  const val = inp.value.trim();
+  if(!val) return;
+  const div = document.createElement('div');
+  div.style.marginBottom = '4px';
+  const label = document.createElement('label');
+  label.className = 'check-item';
+  label.innerHTML = `<input type="checkbox"> <span>${val}</span>`;
+  label.onclick = function(){ markCheck(this,'s1-cnt'); };
+  div.appendChild(label);
+  document.getElementById('custom-comps').appendChild(div);
+  inp.value = '';
+  updateProg();
+}
+
+function addRA() {
+  const list = document.getElementById('ra-list');
+  const n = list.children.length + 1;
+  const d = document.createElement('div');
+  d.className = 'ra-item';
+  d.innerHTML = `<div class="ra-num">${n}</div><div class="ra-text"><input type="text" placeholder="El estudiante será capaz de..."></div>`;
+  list.appendChild(d);
+}
+
+function addAsig() {
+  const name = document.getElementById('new-asig-name').value.trim();
+  const sem = document.getElementById('new-asig-sem').value;
+  if(!name || !sem) return;
+  const blocks = document.querySelectorAll('.sem-block');
+  const semIdx = parseInt(sem) - 1;
+  if(blocks[semIdx]) {
+    const row = document.createElement('div');
+    row.className = 'asig-row';
+    row.innerHTML = `<span class="asig-name">${name} <span style="font-size:11px;color:var(--color-text-secondary)">(personalizada)</span></span><div class="pill-toggle"><span class="pill-opt active-obl" onclick="setPill(this,'obl')">Obligatoria</span><span class="pill-opt" onclick="setPill(this,'elec')">Electiva</span></div>`;
+    blocks[semIdx].appendChild(row);
+  }
+  document.getElementById('new-asig-name').value = '';
+  document.getElementById('new-asig-sem').value = '';
+}
+
+function updateProg() {
+  const s1 = document.querySelectorAll('#s1 input:checked').length >= 4;
+  const s2 = true;
+  const s3 = document.getElementById('sel-comp').value !== '';
+  const s4 = document.getElementById('tray-a-name').value.trim() !== '' && document.getElementById('tray-b-name').value.trim() !== '';
+  const s5 = document.querySelectorAll('.tool-chip.sel').length >= 2;
+  const checks = [s1,s2,s3,s4,s5];
+  const done = checks.filter(Boolean).length;
+  const pct = Math.round((done/5)*100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  const rows = document.querySelectorAll('#status-checks .status-row');
+  checks.forEach((ok,i) => {
+    rows[i].className = 'status-row ' + (ok ? 'status-ok' : 'status-pend');
+    rows[i].innerHTML = `<i class="ti ti-${ok ? 'circle-check' : 'circle'}" aria-hidden="true"></i> ${rows[i].innerHTML.split('</i> ')[1] || rows[i].textContent.trim()}`;
+  });
+}
+
+function generatePitch() {
+  sendPrompt('GENERAR PITCH');
+}
+
+document.getElementById('tray-a-name').addEventListener('input', updateProg);
+document.getElementById('tray-b-name').addEventListener('input', updateProg);
+document.getElementById('sel-comp').addEventListener('change', updateProg);
+document.querySelectorAll('.tool-chip').forEach(c => c.addEventListener('click', () => setTimeout(updateProg, 50)));
+
+updateProg();
+</script>
